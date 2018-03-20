@@ -1,29 +1,36 @@
 #include<stdio.h>
 #include<stdbool.h>
-#define SIZE 10
 
-int main()
+
+void sort(int *p,int length)
 {
-    int a[SIZE] = {12,43,9,13,67,98,101,89,3,35};
-    int i,j,temp;
-    for(i=0;i<10-1;i--)
+    for(int i = 0;i < length-1;i++)
     {
-        for(j=0;j<10-1;j++)
+        for (int j = length-1;j >= i;j--)
         {
-            if(a[j]>a[j+1])
+            if (p[j-1] >p[j])
             {
-                temp = a[j+1];
-                a[j+1] = a[j];
-                a[j] = temp;
+                int temp = p[j];
+                p[j] = p[j+1];
+                p[j+1] = temp;
             }
         }
     }
-
-    printf("排列好的序列是：\n");
-    for(i = 0;i<10;i++)
-    {
-    printf("%d ",a[i]);
-    }
-    return 0;
 }
 
+void bubble(int *p,int len)
+{
+    for(int i=0;i<len;i++)
+    {
+        printf("%d ",p[i]);
+    }
+    printf("\n");
+}
+
+int main(void)
+{
+    int arr[];
+    scanf("%d ",&arr[]);
+    sort(arr);
+    bubble(arr);
+}
