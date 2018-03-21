@@ -1,36 +1,45 @@
 #include<stdio.h>
 #include<stdbool.h>
+#define N 100
+void bubblesort(int *,int);
 
-
-void sort(int *p,int length)
+void bubblesort(int arr[],int length)
 {
-    for(int i = 0;i < length-1;i++)
+    int i,j,temp;
+    //printf("冒泡排序后:");
+    for(i = 0;i < length-1;i++)
     {
-        for (int j = length-1;j >= i;j--)
+        //printf("1 %d, ",i);
+        for (j = length-1;j >= i;j--)
         {
-            if (p[j-1] >p[j])
-            {
-                int temp = p[j];
-                p[j] = p[j+1];
-                p[j+1] = temp;
+            //printf("2 %d, ",j);
+            if (arr[j-1] > arr[j]){
+                temp = arr[j];
+                arr[j] = arr[j-1];
+                arr[j-1] = temp;
             }
         }
     }
-}
-
-void bubble(int *p,int len)
-{
-    for(int i=0;i<len;i++)
-    {
-        printf("%d ",p[i]);
-    }
     printf("\n");
-}
+ }
+
 
 int main(void)
 {
-    int arr[];
-    scanf("%d ",&arr[]);
-    sort(arr);
-    bubble(arr);
+    int arr[N];
+    int i;
+    printf("请输入：\n");
+    for(i=0;i<7;i++)
+    {
+       // printf("%d : ", i);
+        scanf("%d",&arr[i]);
+        //printf("\n");
+    }
+    bubblesort(arr,7);
+    printf("冒泡排序后：\n");
+    for(i=0;i<7;i++)
+    {
+        printf("%d \n",arr[i]);
+    }
+    return 0;
 }
