@@ -212,8 +212,8 @@ def SearchCard(dsearch,FMkeys,LCkeys):
                     searchcard.append(x)
                    # print("==",searchcard)
                    # print("%",name)
-#            else:
-#                print("===None!!!")
+           # else:
+               # print("===None!!!")
     return searchcard
 
 
@@ -228,7 +228,7 @@ def parserfile(filename , key):
     config = open(filename,'rb')
     for line in config.readlines():
             line = line.decode('utf-8')
-            #regExp = re.compile(r'([\w]+): {([\d|\s|\w|\.]+)}')
+            # regExp = re.compile(r'([\w]+): {([\d|\s|\w|\.]+)}')
             regExp = re.compile('(\w+):(^//.|^/|^[a-zA-Z])?:?/.+(/$)?')
             res = regExp.search(line)
             if res:
@@ -268,7 +268,7 @@ if __name__ == '__main__':
     if length == 3:
         ip_route = sys.argv[1]
         info_route = sys.argv[2]
-        #import ipdb;ipdb.set_trace()
+        # import ipdb;ipdb.set_trace()
     else:
         filename = "./config.txt"
         ip_route = parserfile(filename,"IP")
