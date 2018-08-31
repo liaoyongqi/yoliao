@@ -1,0 +1,5 @@
+
+
+IP:/home/ins-diag-qa/scripts/EOR/P_system_info_dev_new_sup.tcl
+INFO:/home/ins-diag-qa/sys_cfg/
+                                                                                                                               │  6 new.py|9 col 28 C| E231 missing whitespace after ',' [pep8]

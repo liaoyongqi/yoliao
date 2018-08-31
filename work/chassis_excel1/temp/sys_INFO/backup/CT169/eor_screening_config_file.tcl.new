@@ -1,0 +1,135 @@
+#!/diag/bin/expect -f
+# EOR screening script variable file 
+global SNBDII_list SC_list SEYM_list SUP_list SHAS_list load_fm load_lc BLAC_list
+set SNBDII_list {}
+set ALTA_list {1 2}
+set SEYM_list {}
+set KIRK_list {1}
+set KSTN_list {}
+set SHAS_list {}
+set BLAC_list {}
+set CYPR_list {}
+set load_fm {1 2 3 4 5 6}
+set load_lc {}
+set WHSL_list {}
+set lc_bypass_list {5 8}
+set MOUN_list {}
+set SIER_list {}
+set MOEN_list {8}
+set SUNR_list {}
+set HONE_list {}
+set CHCP_list {1 5 6}
+set ABVL_list {}
+set ARHD_list {}
+set MONT_list {}
+set APCH_list {}
+set SGLF_list {}
+set BLMT_list {}
+
+# if mode =1 run_on_time; if mode = 2 run parallel
+global mode
+set mode 1
+set ethtool_on 0
+global stop_on_error
+set stop_on_error 12
+global epc_flag
+set epc_flag 1
+global fan_speed
+set fan_speed 50
+set prbs_mode2 0
+global fp_bypass_flag
+set fp_bypass_flag 0
+
+
+# skiplist for FM, SUP and SC
+set shas_skip_list {}
+set mtby_skip_list {}
+set mtkt_skip_list {}
+set blmt_skip_list {}
+set moun_skip_list {}
+set sier_skip_list {}
+set sglf_skip_list {}
+set sup_skip_list {}
+set kirk_skip_list {}
+set kstn_skip_list {}
+set sc_skip_list {}
+set alta_skip_list {}
+
+# skiplist for LC
+set seym_skip_list {}
+set whsl_skip_list {}
+set snbdii_skip_list {}
+set blac_skip_list {}
+set cypr_skip_list {}
+set moen_skip_list {}
+set sunr_skip_list {}
+set cyns_skip_list {}
+set cscd_skip_list {}
+set shwn_skip_list {}
+set apch_skip_list {}
+set mont_skip_list {}
+set tcma_skip_list {}
+set hone_skip_list {}
+set chcp_skip_list {}
+set abvl_skip_list {}
+set arhd_skip_list {}
+
+
+
+
+# td2 test duration for TRIDENT test
+global duration
+set duration 120
+set pkt_size 64
+
+# debug flag
+# set to 1, run test; set to 0, not run
+global sup_sc_cover
+set sup_sc_cover 1
+global sc_only_flag
+set sc_only_flag 0
+global sup_only_flag
+set sup_only_flag 0
+global eobc_flag
+set eobc_flag 1
+
+global dsp_flag
+set dsp_flag 1
+
+global TD2_flag
+set TD2_flag 1
+
+global bios_flag
+set bios_flag 1
+
+global sw_flag
+set sw_flag 1
+global eobc_run_cnt
+set eobc_run_cnt 1
+
+global sw_run_cnt
+set sw_run_cnt 1
+
+global bios_run_cnt
+set bios_run_cnt 1
+set debug_mode 1
+global ssd_init_flag
+set ssd_init_flag 0
+global usb_init_flag
+set usb_init_flag 0
+global u_upgrade_flag
+set u_upgrade_flag 1
+set BLMT_list {}
+
+set CYNS_list {}
+set MTKT_list {}
+set CSCD_list {}
+set SHWN_list {}
+set MTBY_list {}
+set TCMA_list {}
+set mmth_skip_list {}
+set MMTH_list {}
+set SVCK_list {}
+set svck_skip_list {}
+set RDWD_list {}
+set rdwd_skip_list {}

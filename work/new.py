@@ -88,7 +88,8 @@ def GetChassis(filePath):
                 resPsu = regExp.search(strEOR)
                 if resPsu:
                     INFO1['PSU'] = resPsu.group(1)
-                    dChasInfo[name] = INFO1
+
+                dChasInfo[name] = INFO1
                     # print("\n\n##",dChasInfo)
 
 

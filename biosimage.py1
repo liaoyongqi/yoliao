@@ -1,0 +1,234 @@
+# !/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+import xlrd
+import xlwt
+import pandas as pd
+import numpy as np
+import re
+import os
+import pexpect
+import sys
+import time
+
+
+
+LC1 = ['RDWD','BLWD','CPCK','RDLK','CSCD','BLMT','CTNS','TCMA','CTPR','SVCK','BLAC','WHST','HONE','CHCP','SEYM','SUNR','CYPR','MOEN', 'load', 'MONT', 'WHSL']
+FM1 = ['MTBK','MTEVT','MMTH','MTKT','MTBY','MOUN','SGLF','SHAS','SHWN', 'SIER', 'load', 'SHWN']
+SUP1 = ['KIRK','KSTN','ZION']
+SC1 = ['ALTA']
+
+
+# stop chissis from web html
+def stop(uname,NAME):
+    child = pexpect.spawn('ssh root@diag-qa-01')
+    i = child.expect(['password:',pexpect.TIMEOUT])
+    print("#####33",readlake)
+    if i == 1:
+        print("ERROR!")
+    if i == 0:
+        # child.expect('password: ')
+        child.sendline('insieme')
+    child.sendline('holdSystem.py -u ' + uname + ' chassis ' + NAME + ' -l ')
+    check = child.expect('online running')
+    if(check == 1):
+        print('hold by ...please change other port!')
+    if(check == 0):
+        stop = child.sendline('holdSystem.py -u ' + uname + ' chassis ' + NAME + ' -s ')
+        if stop == 1:
+            print("someone had stoped it,please change other one!!")
+        if stop == 0:
+            print("%s is stopped" %NAME)
+    return 0
+
+# read data from local excel to get the ip and port
+def read_excel():
+    workbook = xlrd.open_workbook(r'./chassis.xlsx')
+    all_list=[]
+    all_content = []
+    aa = []
+    ab = []
+    ac = []
+    ad = []
+    ba = {}
+    s = workbook.sheet_by_index(0)
+    rows = s.nrows
+    cols = s.ncols
+    for i in range(1,rows):
+        row_content = []
+        for j in range(cols):
+            # col_content = s.col_values(j)
+            cell = s.cell_value(i,j)
+            row_content.append(cell)
+        all_content.append(row_content)
+        aa1 = re.findall(r"\w+\.?\w*",all_content[i-1][5])
+        aa2 = re.findall(r"\d+\.?\d*",all_content[i-1][5])
+        ab1 = re.findall(r"\w+\.?\w*",all_content[i-1][6])
+        ab2 = re.findall(r"\d+\.?\d*",all_content[i-1][6])
+        ac1 = re.findall(r"\w+\.?\w*",all_content[i-1][7])
+        ac2 = re.findall(r"\d+\.?\d*",all_content[i-1][7])
+        aa.append(aa1[0])
+        ab.append(ab1[0])
+        ac.append(ac1[0])
+        ad.append(all_content[i-1][0])
+        # ba['NAME'] = ad[0]
+        ba['NAME'] = all_content[i-1][0]
+        ba['IP'] = all_content[i-1][1]
+        ba['SUP1'] = all_content[i-1][2]
+        ba['SUP2'] = all_content[i-1][3]
+        ba['LCport'] = aa2[0]
+        ba['FMport'] = ab2[0]
+        ba['SUPport'] = ac2[0]
+        ba['LC'] = aa1
+        ba['FM'] = ab1
+        ba['SUP'] = ac1
+        all_list.append(ba.copy())
+    return all_list
+
+
+# def telnet(username,des,bin,password):
+def telnet():
+    NAME = ''
+    sup_sonsole = ''
+    # sup2_console = ''
+    # log = ''
+    port = ''
+    dict1 = []
+    r = ''
+    try:
+    # dict1 = read_excel()
+    # for a in dict1:
+        # NAME = a['NAME']
+        # port = a['SUPport']
+        # sup_sonsole = a['SUP1']
+        # sup_sonsole = '172.31.236.43 2010'
+        # stop(username,a['NAME'])
+        # cmd = "telnet %s"%(sup_sonsole)
+        child = pexpect.spawn('telnet 172.31.236.43 2010')
+        # child.logfile=sys.stdout
+        # child = pexpect.spawn('telnet 172.31.236.43 2010')
+        # child.sendline('\r\n')
+        print(":------------",child.before)
+        child.sendline(str("\n"))
+        # index = child.expect("telnet: Unable to connect to remote host: Connection refused")
+        # print(index)
+        # if(index == 1):
+            # print("please change other sup_console")
+        # else:
+            # print("telnet it successfully! go on...")
+        # index = child.expect('Trying 172.31.236.43...',timeout = 5)
+
+        # match the first log
+        lstExp = ['login:','Password:','[\d]]','#', pexpect.TIMEOUT, pexpect.EOF]
+        while True:
+            index = child.expect(lstExp)
+            if index == 0:
+                print('login enter...')
+                child.sendline('diag')
+            elif index == 1:
+                print('password enter')
+                child.sendline('ins123diag')
+            elif index == 2 or index == 3:
+                break
+            else:
+                print("Timeout")
+                exit()
+
+        child.sendline('\r\n')
+        print('please scp....')
+        child.sendline("scp -r %s@hw-01:%s/%s /mnt/"%('yoliao','/tftpboot/hjiang/eor_upgrade','ChimTyskPineDr_BIOS_5_31_0_Release.bin'))
+        index = child.expect(["password",pexpect.EOF],timeout = 5)
+        if(index == 0):
+            child.sendline('BQMvIUsE')
+            print("scp successfully!!")
+            child.expect("#")
+            # child.sendline("cd /mnt")
+
+            child.sendline("ls")
+            child.expect("#")
+            print("\\\\\\/////",child.before)
+            child.sendline('bios_cmd program 0 /mnt/ChimTyskPineDr_BIOS_5_31_0_Release.bin')
+            index = child.expect('(y/n)')
+            print("!@#",child.before)
+            if index == 0:
+                print("Do you want to continue programming")
+                # child.sendline('y')
+            child.sendline('bios_cmd info')
+        # else:
+            # print("password wrong!")
+            #except pexpect.EOF:
+            #    print("TIME OUT")
+            #    child.colse
+        # elif index == 11:
+            # print("--------------------------");
+            # print(child.after)
+        else:
+            print("telnet login failed!!")
+            child.close()
+        # except pexpect.EOF:
+            # child.close()
+    except pexpect.EOF:
+        child.close()
+    return r
+
+
+# check the chassis's port and ssh corresponding port
+def bios_program(readlake):
+    dict2 = []
+    port = ''
+    # dict2 = read_excel()
+    child = telnet()
+    print("!++==========",dict2)
+    for a in dict2:
+        if readlake in a['LC']:
+            child.send('bios_cmd program 0 /mnt/' + bin)
+            child.send('bios_cmd info')
+            child.send('exit')
+
+        elif readlake in a['FM']:
+            port = 'fm' + a['FMport']
+        elif 'ZION' in a['SUP']:
+            port = 'sup' + a['SUPport']
+
+    cmd = "scp -r %s diag@%s:/mnt"%('ChimTyskPineDr_BIOS_5_31_0_Release.bin','sup1')
+    scp = pexpect.spawn(cmd)
+    k = scp.expect([pexpect.EOF],timeout = 5)
+    try:
+        if(k == 0):
+            scp.sendline('ssh sup1')
+            scp.sendline('md5 ChimTyskPineDr_BIOS_5_31_0_Release.bin')
+            scp.sendline('bios_cmd program 0 /mnt/ChimTyskPineDr_BIOS_5_31_0_Release.bin')
+            scp.sendline('bios_cmd info')
+            d = scp.readline()
+            scp.sendline('exit')
+        else:
+            print("there is no such file!!")
+    except pexpect.EOF:
+        scp.close()
+    return child
+
+
+
+
+if __name__ == '__main__':
+    # read_excel()
+    # main(sys.argv)
+    all_dict = {}
+    length = len(sys.argv)
+    if length >= 4:
+        username = sys.argv[1]
+        des = sys.argv[2]
+        bin = sys.argv[3]
+        readlake = sys.argv[4]
+        password = sys.argv[5]
+    # all_list = read_excel()
+    # print("=====all_dict===",all_list)
+    # name_list = []
+    # for a in all_list:
+        # if readlake in a['LC'] or readlake in a['FM'] or readlake in a['SUP']:
+            # name_list.append(a['NAME'])
+    # print("=======name========",name_list[0])
+    # stop('yoliao',name_list[0])
+    # telnet(username,des,bin,password)
+    telnet()
+    # bios_program(readlake)

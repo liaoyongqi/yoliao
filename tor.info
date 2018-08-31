@@ -1,0 +1,10 @@
+source /home/ins-diag-qa/scripts/UTLI/tor_list_stuck.tcl
+global tb_dict
+set tb_dict {
+	TOR3 {ts_IP_sup1 "172.31.236.466" ts_line_sup1 "01" ts_IP_sup2 "172.21.159." ts_line_sup2 "05" \
+		apc_port {"172.31.236.23 1 4"} psu_cnt "1" card_cfg ""
+		}
+	TOR5 {ts_IP_sup1 "172.31.236.46" ts_line_sup1 "13" ts_IP_sup2 "172.21.159." ts_line_sup2 "05" \
+		apc_port {"172.31.236.23 1 6"} psu_cnt "1" card_cfg ""
+		}
+ }
